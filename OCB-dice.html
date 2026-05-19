@@ -1,0 +1,144 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>OCB DICE</title>
+  <meta name="theme-color" content="#FF6200">
+  <style>
+    body {
+      background: #111;
+      color: white;
+      text-align: center;
+      padding: 20px;
+      font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+      margin: 0;
+      min-height: 100vh;
+    }
+    h1 {
+      font-size: 48px;
+      margin: 10px 0 5px;
+      letter-spacing: 2px;
+    }
+    .subtitle {
+      color: #FF6200;
+      font-size: 17px;
+      margin-bottom: 30px;
+      letter-spacing: 1px;
+    }
+    .dice-container {
+      display: flex;
+      justify-content: center;
+      gap: 45px;
+      margin: 40px 0;
+      flex-wrap: wrap;
+    }
+    .dice {
+      width: 135px;
+      height: 135px;
+      background: white;
+      border-radius: 22px;
+      box-shadow: 0 15px 35px rgba(0,0,0,0.6);
+      font-size: 78px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      color: #111;
+      transition: transform 0.4s;
+    }
+    button {
+      background: #FF6200;
+      color: white;
+      font-size: 26px;
+      font-weight: bold;
+      padding: 18px 60px;
+      border: none;
+      border-radius: 16px;
+      cursor: pointer;
+      margin: 15px;
+      width: 280px;
+    }
+    #sum {
+      font-size: 72px;
+      font-weight: bold;
+      color: #FF6200;
+      margin: 20px 0;
+    }
+    .history {
+      margin-top: 30px;
+      text-align: left;
+      max-width: 380px;
+      margin-left: auto;
+      margin-right: auto;
+      background: #1f1f1f;
+      padding: 18px;
+      border-radius: 14px;
+      height: 240px;
+      overflow-y: auto;
+    }
+  </style>
+</head>
+<body>
+  <h1>OCB DICE</h1>
+  <p class="subtitle">Use for Orange Cone Boy TRPG</p>
+  
+  <div class="dice-container">
+    <div class="dice" id="dice1">⚀</div>
+    <div class="dice" id="dice2">⚅</div>
+  </div>
+
+  <div id="sum">7</div>
+  
+  <button onclick="rollDice()">ROLL DICE</button>
+
+  <div class="history">
+    <strong style="color:#ddd;">ROLL HISTORY</strong>
+    <div id="history" style="margin-top:10px; line-height:1.9; font-size:17px;"></div>
+  </div>
+
+  <script>
+    const faces = ["⚀","⚁","⚂","⚃","⚄","⚅"];
+
+    function rollDice() {
+      const d1 = document.getElementById('dice1');
+      const d2 = document.getElementById('dice2');
+      const sumEl = document.getElementById('sum');
+      const historyEl = document.getElementById('history');
+
+      // 구르는 애니메이션
+      d1.style.transform = 'rotate(720deg) scale(1.15)';
+      d2.style.transform = 'rotate(720deg) scale(1.15)';
+
+      setTimeout(() => {
+        const num1 = Math.floor(Math.random() * 6) + 1;
+        const num2 = Math.floor(Math.random() * 6) + 1;
+        const total = num1 + num2;
+
+        d1.textContent = faces[num1-1];
+        d2.textContent = faces[num2-1];
+        sumEl.textContent = total;
+
+        // 기록
+        const time = new Date().toLocaleTimeString('ko-KR', {hour:'2-digit', minute:'2-digit'});
+        const entry = document.createElement('div');
+        entry.textContent = `${time}　　${num1} + ${num2} = ${total}`;
+        historyEl.prepend(entry);
+
+        if (historyEl.children.length > 20) {
+          historyEl.removeChild(historyEl.lastChild);
+        }
+
+        // 애니메이션 초기화
+        d1.style.transform = 'rotate(0deg)';
+        d2.style.transform = 'rotate(0deg)';
+      }, 500);
+    }
+
+    // 초기 설정
+    window.onload = () => {
+      document.getElementById('dice1').textContent = faces[0];
+      document.getElementById('dice2').textContent = faces[5];
+    };
+  </script>
+</body>
+</html>
